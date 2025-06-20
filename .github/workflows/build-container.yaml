@@ -74,7 +74,7 @@ jobs:
           for tag in ${{ steps.meta.outputs.tags }}
           do
             echo "Encrypting last layer of ${tag}"
-            buildah push \
+            podman push \
               --creds "${{ github.actor }}:${{ github.token }}" \
               --encrypt-layer -1 \
               --encryption-key pgp:fedora_apps \
