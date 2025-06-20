@@ -13,4 +13,4 @@ if [ -d /var/lib/chrony ]; then
   chown -R chrony:chrony /var/lib/chrony
 fi
 
-exec $@
+exec "$@"
