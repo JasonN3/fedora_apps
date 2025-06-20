@@ -61,8 +61,8 @@ jobs:
         with:
           containerfiles: ${{ matrix.app }}/Containerfile
           context: ${{ matrix.app }}
-          tags: ${{ steps.meta.outputs.tags || steps.meta_pr.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels || steps.meta_pr.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Push image
         uses: redhat-actions/push-to-registry@v2
