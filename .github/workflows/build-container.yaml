@@ -66,6 +66,15 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Encrypt final layer
+        run: |
+          echo ${{ secrets.GPG_KEY }} | base64 -d | gpg --import
+          for tag in ${{ steps.meta.outputs.tags }}
+          do
+            echo "Encrypting last layer of ${tag}"
+            buildah commit --encrypt-layer -1 --encryption-key pgp:fedora_apps ${tag}
+          done
+
       - name: Push image
         uses: redhat-actions/push-to-registry@v2
         with:
