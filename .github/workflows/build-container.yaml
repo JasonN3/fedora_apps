@@ -60,6 +60,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: ${{ matrix.app }}/Containerfile
+          context: ${{ matrix.app }}
           tags: ${{ steps.meta.outputs.tags || steps.meta_pr.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels || steps.meta_pr.outputs.labels }}
 
