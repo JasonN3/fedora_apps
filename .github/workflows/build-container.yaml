@@ -69,18 +69,18 @@ jobs:
       - name: Encrypt final layer and push image
         run: |
           set -euxo pipefail
-          export GNUPGHOME="$(mktemp -d)"
-          echo "${{ secrets.GPG_KEY }}" | base64 --decode | gpg --batch --yes --import
+          keyfile=$(mktemp)
+          echo "${{ secrets.JWE_KEY }}" > ${keyfile}
           for tag in ${{ steps.meta.outputs.tags }}
           do
             echo "Encrypting last layer of ${tag}"
             podman push \
               --creds "${{ github.actor }}:${{ github.token }}" \
               --encrypt-layer -1 \
-              --encryption-key pgp:fedora_apps \
+              --encryption-key jwe:${keyfile} \
               "${tag}"
           done
-          rm -rf "$GNUPGHOME"
+          rm -f ${keyfile}
 
   combine-tags:
     strategy:
