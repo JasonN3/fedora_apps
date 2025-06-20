@@ -75,7 +75,7 @@ jobs:
           do
             echo "Encrypting last layer of ${tag}"
             buildah push \
-              --creds "${{ github.actor }}:${{ github.token }}"
+              --creds "${{ github.actor }}:${{ github.token }}" \
               --encrypt-layer -1 \
               --encryption-key pgp:fedora_apps \
               "${tag}"
