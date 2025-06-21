@@ -82,7 +82,7 @@ jobs:
           password: ${{ github.token }}
           extra-args: |
             --encrypt-layer -1
-            --encryption-key jwe:${keyfile}
+            --encryption-key jwe:${{ env.keyfile }}
 
       - name: Delete keyfile
         run: |
