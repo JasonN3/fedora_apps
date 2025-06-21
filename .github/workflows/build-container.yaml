@@ -109,15 +109,18 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
 
-      - name: Pull image
-        run: |
-          for tag in ${{ steps.meta.outputs.tags }}
-          do
-            echo "Pulling ${tag}-amd64"
-            podman pull ${tag}-amd64
-            echo "Pulling ${tag}-arm64"
-            podman pull ${tag}-arm64
-          done
+      #- name: Pull image
+      #  run: |
+      #    keyfile=$(mktemp)
+      #    echo "${{ secrets.JWE_KEY }}" > ${keyfile}
+      #    for tag in ${{ steps.meta.outputs.tags }}
+      #    do
+      #      echo "Pulling ${tag}-amd64"
+      #      podman pull --decryption-key jwe:${keyfile} ${tag}-amd64
+      #      echo "Pulling ${tag}-arm64"
+      #      podman pull --decryption-key jwe:${keyfile} ${tag}-arm64
+      #    done
+      #    rm -f ${keyfile}
 
       - name: Generate manifest
         run: |
