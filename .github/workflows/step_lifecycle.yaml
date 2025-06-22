@@ -54,10 +54,10 @@ jobs:
           echo "pending_updates=${pending_updates}" >> "$GITHUB_OUTPUT"
           
       - name: Merge PR
-        if: env.pending_updates != ""
+        if: ${{ steps.find_pr.outputs.pending_updates != '' }}
         run: |
-          echo "Merging PR ${{ env.pending_updates }}"
-          gh pr merge -s ${{ env.pending_updates }}
+          echo "Merging PR ${{ steps.find_pr.outputs.pending_updates }}"
+          gh pr merge -s ${{ steps.find_pr.outputs.pending_updates }}
   
   rebuild:
     if: needs.merge.outputs.pr == "" && needs.prev_step.outputs.step == "main"

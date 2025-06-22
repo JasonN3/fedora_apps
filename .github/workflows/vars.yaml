@@ -20,5 +20,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sucess
-        run:
-          echo "Vars loaded"
+        run: echo "Vars loaded"

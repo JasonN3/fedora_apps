@@ -51,7 +51,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          context: ${{ inputs.ref != "" && "git" || "workflow"}}
+          context: ${{ inputs.ref != '' && 'git' || 'workflow' }}
           flavor: |
             suffix=-${{ matrix.app }}-${{ matrix.arch }}
           images: |
@@ -108,7 +108,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        if: inputs.ref != ""
+        if: ${{ inputs.ref != '' }}
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref}}

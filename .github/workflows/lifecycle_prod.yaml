@@ -7,6 +7,6 @@ on:
 
 jobs:
   promote-to-dev:
-    uses: ./.github/workflows/step_lifecycle.yml
+    uses: ./.github/workflows/step_lifecycle.yaml
     with:
       next_step: "prod"
