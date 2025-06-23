@@ -4,6 +4,7 @@ on:
       next_step:
         required: true
         type: string
+        description: 'Target lifecycle step (e.g., dev, prod)'
 jobs:
   load_vars:
     name: Load Variables
@@ -37,7 +38,7 @@ jobs:
           curr_month=$(date '+%Y-%m (%B %Y)')
           pending_updates=$(gh pr list -l lifecycle --base ${{ inputs.next_step }} --draft=false --json number,title --jq ".[] | select(.title == \"Monthly Updates - ${curr_month}\").number")
           num_updates="$(echo "${pending_updates}" | wc -w)"
-          
+
           # Multiple PRs were found. Something went wrong
           if [[ ${num_updates} -gt 1 ]]
           then
@@ -52,13 +53,13 @@ jobs:
           fi
 
           echo "pending_updates=${pending_updates}" >> "$GITHUB_OUTPUT"
-          
+
       - name: Merge PR
         if: ${{ steps.find_pr.outputs.pending_updates != '' }}
         run: |
           echo "Merging PR ${{ steps.find_pr.outputs.pending_updates }}"
           gh pr merge -s ${{ steps.find_pr.outputs.pending_updates }}
-  
+
   rebuild:
     if: ${{ needs.merge.outputs.pr == '' && needs.prev_step.outputs.step == 'main' }}
     needs:
@@ -102,4 +103,3 @@ jobs:
           tags: ${{ steps.manifest.outputs.tag }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
