@@ -7,7 +7,7 @@ on:
 jobs:
   load_vars:
     name: Load Variables
-    uses: ./.github/workflows/vars.yml
+    uses: ./.github/workflows/vars.yaml
 
   prev_step:
     name: Get previous step
@@ -60,7 +60,7 @@ jobs:
           gh pr merge -s ${{ steps.find_pr.outputs.pending_updates }}
   
   rebuild:
-    if: needs.merge.outputs.pr == "" && needs.prev_step.outputs.step == "main"
+    if: ${{ needs.merge.outputs.pr == '' && needs.prev_step.outputs.step == 'main' }}
     needs:
       - load_vars
       - merge
