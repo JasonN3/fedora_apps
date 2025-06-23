@@ -77,6 +77,7 @@ jobs:
       - load_vars
       - merge
       - rebuild
+      - prev_step
     strategy:
       fail-fast: false
       matrix:
@@ -100,5 +101,5 @@ jobs:
           image: ghcr.io/${{ github.repository }}
           tags: ${{ steps.manifest.outputs.tag }}
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
