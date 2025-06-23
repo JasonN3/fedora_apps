@@ -1,0 +1,23 @@
+name: Load Variables
+
+on:
+  workflow_call:
+    outputs:
+      APPS:
+        value: '[
+          "chrony"
+          ]'
+      LIFECYCLE:
+        value: '[
+          "main",
+          "dev",
+          "prod"
+          ]'
+
+jobs:
+  load-vars:
+    name: Load Variable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sucess
+        run: echo "Vars loaded"

@@ -9,18 +9,22 @@ on:
   pull_request:
     branches:
       - main
-
-  #schedule:
-    # Patch Tuesday (Second Tuesday of the month)
-  #  - cron: "0 7 8-14 * 2"
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: true
 
 jobs:
+  load_apps:
+    name: Load Variables
+    uses: ./.github/workflows/vars.yaml
+
   build-container:
     strategy:
       fail-fast: false
       matrix:
-        app:
-          - chrony
+        app: ${{ fromJson(needs.load_apps.outputs.APPS) }}
         os:
           - ubuntu-24.04
           - ubuntu-24.04-arm
@@ -38,6 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.ref || github.ref}}
           submodules: recursive
           fetch-depth: 0
           fetch-tags: 'true'
@@ -46,6 +51,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
+          context: ${{ inputs.ref != '' && 'git' || 'workflow' }}
           flavor: |
             suffix=-${{ matrix.app }}-${{ matrix.arch }}
           images: |
@@ -101,10 +107,20 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: Checkout
+        if: ${{ inputs.ref != '' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref}}
+          submodules: recursive
+          fetch-depth: 0
+          fetch-tags: 'true'
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
+          context: ${{ inputs.ref != "" && "git" || "workflow"}}
           flavor: |
             suffix=-${{ matrix.app }}
           images: |
@@ -118,7 +134,7 @@ jobs:
 
       - name: Generate manifest
         run: |
-          for tag in ${{ steps.meta.outputs.tags }}
+          for tag in $(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ' ')
           do
             podman manifest create ${tag}
             podman manifest add ${tag} \

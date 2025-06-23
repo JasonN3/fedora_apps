@@ -1,0 +1,12 @@
+name: Promote to dev
+
+on:
+  schedule:
+    # Patch Tuesday (Second Tuesday of the month)
+    - cron: "0 7 8-14 * 2"
+
+jobs:
+  promote-to-dev:
+    uses: ./.github/workflows/step_lifecycle.yaml
+    with:
+      next_step: "dev"
