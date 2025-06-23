@@ -1,0 +1,16 @@
+name: Build Container for PR
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Rebuild Image
+    uses: ./.github/workflows/build-container.yaml
