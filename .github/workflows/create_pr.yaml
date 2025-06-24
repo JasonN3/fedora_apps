@@ -38,6 +38,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           next_month=$(date -d "next month" '+%Y-%m (%B %Y)')
           gh pr create --base ${{ needs.next_step.outputs.step }} --head ${{ github.ref_name }} --label lifecycle --title "Monthly Updates - ${next_month} - ${{ needs.next_step.outputs.step }}" --body "Changes to ${{ github.ref_name }} to apply to ${{ needs.next_step.outputs.step }} during the next patch cycle"
