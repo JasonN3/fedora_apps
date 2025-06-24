@@ -16,15 +16,17 @@ on:
         required: true
 
 jobs:
-  load_apps:
+  load_vars:
     name: Load Variables
     uses: ./.github/workflows/vars.yaml
 
   build-container:
+    needs:
+      - load_vars
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJson(needs.load_apps.outputs.APPS) }}
+        app: ${{ fromJson(needs.load_vars.outputs.APPS) }}
         os:
           - ubuntu-24.04
           - ubuntu-24.04-arm
@@ -35,6 +37,7 @@ jobs:
             arch: arm64
     name: Build Container Image
     runs-on: ${{ matrix.os }}
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -120,7 +123,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          context: ${{ inputs.ref != "" && "git" || "workflow"}}
+          context: ${{ inputs.ref != '' && 'git' || 'workflow' }}
           flavor: |
             suffix=-${{ matrix.app }}
           images: |
