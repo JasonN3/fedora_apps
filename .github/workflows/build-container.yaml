@@ -1,11 +1,19 @@
 name: Build Container
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
   workflow_call:
     inputs:
       ref:
         type: string
-        required: false
+        required: true
 
 jobs:
   load_apps:
@@ -27,6 +35,7 @@ jobs:
             arch: arm64
     name: Build Container Image
     runs-on: ${{ matrix.os }}
+    environment: dev
     permissions:
       contents: read
       packages: write
