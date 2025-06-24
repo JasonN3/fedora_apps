@@ -30,6 +30,9 @@ jobs:
       - load_vars
       - next_step
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Create PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
