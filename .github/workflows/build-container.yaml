@@ -121,7 +121,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          context: ${{ inputs.ref != "" && "git" || "workflow"}}
+          context: ${{ inputs.ref != '' && 'git' || 'workflow' }}
           flavor: |
             suffix=-${{ matrix.app }}
           images: |
