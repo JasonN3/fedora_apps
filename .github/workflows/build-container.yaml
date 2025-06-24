@@ -16,15 +16,17 @@ on:
         required: true
 
 jobs:
-  load_apps:
+  load_vars:
     name: Load Variables
     uses: ./.github/workflows/vars.yaml
 
   build-container:
+    needs:
+      - load_vars
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJson(needs.load_apps.outputs.APPS) }}
+        app: ${{ fromJson(needs.load_vars.outputs.APPS) }}
         os:
           - ubuntu-24.04
           - ubuntu-24.04-arm
