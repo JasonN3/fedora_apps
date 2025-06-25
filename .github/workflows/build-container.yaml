@@ -52,6 +52,7 @@ jobs:
       - name: Checkout configs
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.repository }}_configs
           ssh-key: '${{ secrets.CONFIG_KEY }}'
           path: configs
 
