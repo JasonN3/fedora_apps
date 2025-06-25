@@ -1,0 +1,17 @@
+---
+# tasks file for frr
+- name: Create config directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ rootfs }}/etc"
+    - "{{ rootfs }}/etc/frr"
+
+- name: Create FRR configuration file
+  ansible.builtin.template:
+    src: frr.conf.j2
+    dest: "{{ rootfs }}/etc/frr/frr.{{ item.key }}.conf"
+    trim_blocks: true
+    lstrip_blocks: true
+  loop: "{{ routers | dict2items }}"

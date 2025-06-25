@@ -5,7 +5,8 @@ on:
     outputs:
       APPS:
         value: '[
-          "chrony"
+          "chrony",
+          "frr"
           ]'
       LIFECYCLE:
         value: '[

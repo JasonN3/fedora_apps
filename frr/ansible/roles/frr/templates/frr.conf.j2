@@ -1,0 +1,113 @@
+{% with router_info=item.value %}
+frr version 10.2.1_git
+frr defaults datacenter
+log syslog informational
+!
+  {% for interface in router_info.interfaces %}
+interface {{ interface.name }}
+    {% if 'ip' in interface %}
+ ip address {{ interface.ip }}
+    {% endif %}
+    {% if 'ospf' in interface %}
+      {% if 'passive' in interface.ospf and interface.ospf.passive %}
+ ip ospf passive
+      {% endif %}
+      {% if 'authentication' in interface.ospf and 'message_digest' in interface.ospf.authentication %}
+ ip ospf authentication message-digest
+        {% with keys=interface.ospf.authentication.message_digest['keys'] %}
+          {% for index in range(keys | length) %}
+ ip ospf message-digest-key {{ index + 1 }} md5 {{ keys[index] }}
+          {% endfor %}
+        {% endwith %}
+      {% endif %}
+      {% if 'bfd' in interface.ospf and interface.ospf.bfd %}
+ ip ospf bfd
+ ip ospf bfd profile default
+      {% endif %}
+    {% endif %}
+    {% if 'vrrp' in interface %}
+ vrrp {{ interface.vrrp.id }}
+ vrrp {{ interface.vrrp.id }} priority {{ interface.vrrp.priority }}
+ vrrp {{ interface.vrrp.id }} ip {{ interface.vrrp.ip }}
+    {% endif %}
+    {% if 'mpls' in interface and interface.mpls %}
+ mpls enable
+    {% endif %}
+exit
+!
+  {% endfor %}
+  {% for bgp in router_info.router.bgp %}
+router bgp {{ bgp.asn }}
+ bgp router-id {{ router_info.id }}
+ bgp graceful-restart
+    {% for group in bgp.neighbors.groups %}
+ neighbor {{ group.name }} peer-group
+ neighbor {{ group.name }} remote-as {{ group.asn }}
+ bgp listen range {{ group.cidr }} peer-group {{ group.name }}
+    {% endfor %}
+    {% for router in bgp.neighbors.routers %}
+ neighbor {{ router.address }} remote-as {{ router.asn }}
+      {% if 'bfd' in router and router.bfd %}
+ neighbor {{ router.address }} bfd
+      {% endif %}
+      {% if 'update_source' in router %}
+ neighbor {{ router.address }} update-source {{ router.update_source }}
+      {% endif %}
+      {% if 'password' in router %}
+ neighbor {{ router.address }} password {{ router.password }}
+      {% endif %}
+      {% if 'connect_timer' in router %}
+ neighbor {{ router.address }} timers connect {{ router.connect_timer }}
+      {% elif 'connect_timer' in bgp %}
+ neighbor {{ router.address }} timers connect {{ bgp.connect_timer }}
+      {% endif %}
+    {% endfor %}
+ address-family ipv4 unicast
+    {% for summary in bgp.summaries %}
+  aggregate-address {{ summary }} summary-only
+    {% endfor %}
+    {% for redistribute in bgp.redistribute %}
+  redistribute {{ redistribute }}
+    {% endfor %}
+ exit-address-family
+exit
+  {% endfor %}
+!
+  {% for ospf in router_info.router.ospf %}
+router ospf
+ router-id {{ router_info.id }}
+    {% for redistribute in ospf.redistribute %}
+ redistribute {{ redistribute }}
+    {% endfor %}
+    {% for network in ospf.networks %}
+ network {{ network }} area 0
+    {% endfor %}
+exit
+  {% endfor %}
+!
+  {% if 'mpls' in router_info %}
+mpls ldp
+ router-id {{ router_info.id }}
+ !
+ address-family ipv4
+  discovery transport-address {{ router_info.id }}
+  !
+    {% for interface in router_info.mpls.interfaces %}
+  interface {{ interface }}
+  exit
+    {% endfor %}
+  !
+ exit-address-family
+ !
+exit
+  {% endif %}
+!
+bfd
+ profile default
+  transmit-interval 100
+  receive-interval 100
+ exit
+ !
+exit
+!
+{% endwith %}
