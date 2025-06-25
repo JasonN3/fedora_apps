@@ -2,4 +2,4 @@ FROM quay.io/frrouting/frr:10.2.3
 
 COPY rootfs/ /
 
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]

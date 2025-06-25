@@ -4,6 +4,9 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
+    owner: root
+    group: root
+    mode: "0755"
   loop:
     - "{{ rootfs }}/etc"
     - "{{ rootfs }}/etc/frr"

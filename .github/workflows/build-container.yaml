@@ -82,7 +82,10 @@ jobs:
           cd ${{ github.workspace }}
           if [[ -d ${{ matrix.app }}/ansible ]]
           then
-            ansible-playbook -e rootfs=$(pwd)/${{ matrix.app }}/rootfs -e @configs/${{ matrix.app }}/ansible/vars.yaml ${{ matrix.app }}/ansible/main.yaml
+            ansible-playbook \
+              -e rootfs=$(pwd)/${{ matrix.app }}/rootfs \
+              -e @configs/${{ matrix.app }}/ansible/vars.yaml \
+              "${{ matrix.app }}/ansible/main.yaml"
           fi
 
       - name: Buildah Build
