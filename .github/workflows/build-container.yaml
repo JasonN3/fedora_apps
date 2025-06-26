@@ -37,7 +37,6 @@ jobs:
             arch: arm64
     name: Build Container Image
     runs-on: ${{ matrix.os }}
-    environment: dev
     permissions:
       contents: read
       packages: write
@@ -46,9 +45,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref}}
-          submodules: recursive
           fetch-depth: 0
           fetch-tags: 'true'
+
+      - name: Checkout configs
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}_configs
+          ssh-key: '${{ secrets.CONFIG_KEY }}'
+          path: configs
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
@@ -65,6 +71,23 @@ jobs:
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
+
+      - name: Switch to matching config branch
+        run: |
+          cd configs
+          git checkout ${{ github.ref_name }} || true
+
+      - name: Generate rootfs
+        env:
+          OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
+        run: |
+          if [[ -d "${{ matrix.app }}/ansible" ]]
+          then
+            ansible-playbook \
+              -e "rootfs=$(pwd)/${{ matrix.app }}/rootfs" \
+              -e "@configs/${{ matrix.app }}/ansible/vars.yaml" \
+              "${{ matrix.app }}/ansible/main.yaml"
+          fi
 
       - name: Buildah Build
         id: build-image
@@ -99,14 +122,15 @@ jobs:
           rm -f "${{ env.keyfile }}"
 
   combine-tags:
+    needs:
+      - load_vars
+      - build-container
     strategy:
       fail-fast: false
       matrix:
-        app:
-          - chrony
+        app: ${{ fromJson(needs.load_vars.outputs.APPS) }}
     name: Combine Tags
     runs-on: ubuntu-24.04
-    needs: build-container
     permissions:
       packages: write
     steps:
