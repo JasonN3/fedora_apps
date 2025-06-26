@@ -54,6 +54,7 @@ jobs:
           repository: ${{ github.repository }}_configs
           ssh-key: '${{ secrets.CONFIG_KEY }}'
           path: configs
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
@@ -80,7 +81,6 @@ jobs:
         env:
           OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
         run: |
-          cd ${{ github.workspace }}
           if [[ -d "${{ matrix.app }}/ansible" ]]
           then
             ansible-playbook \
