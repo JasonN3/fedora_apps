@@ -37,7 +37,6 @@ jobs:
             arch: arm64
     name: Build Container Image
     runs-on: ${{ matrix.os }}
-    environment: dev
     permissions:
       contents: read
       packages: write
@@ -82,11 +81,11 @@ jobs:
           OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
         run: |
           cd ${{ github.workspace }}
-          if [[ -d ${{ matrix.app }}/ansible ]]
+          if [[ -d "${{ matrix.app }}/ansible" ]]
           then
             ansible-playbook \
-              -e rootfs=$(pwd)/${{ matrix.app }}/rootfs \
-              -e @configs/${{ matrix.app }}/ansible/vars.yaml \
+              -e "rootfs=$(pwd)/${{ matrix.app }}/rootfs" \
+              -e "@configs/${{ matrix.app }}/ansible/vars.yaml" \
               "${{ matrix.app }}/ansible/main.yaml"
           fi
 
