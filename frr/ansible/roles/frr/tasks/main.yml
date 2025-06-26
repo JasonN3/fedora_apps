@@ -15,3 +15,11 @@
     trim_blocks: true
     lstrip_blocks: true
   loop: "{{ routers | dict2items }}"
+
+- name: Create FRR daemons file
+  ansible.builtin.template:
+    src: daemons.j2
+    dest: "{{ rootfs }}/etc/frr/daemons.{{ item.key }}"
+    trim_blocks: true
+    lstrip_blocks: true
+  loop: "{{ routers | dict2items }}"

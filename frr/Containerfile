@@ -1,5 +1,6 @@
 FROM quay.io/frrouting/frr:10.2.3
 
 COPY rootfs/ /
+RUN rm /etc/frr/daemons
 
 ENTRYPOINT ["/entrypoint.sh"]
