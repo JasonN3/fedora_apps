@@ -78,6 +78,8 @@ jobs:
           git checkout ${{ github.ref_name }} || true
 
       - name: Generate rootfs
+        env:
+          OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
         run: |
           cd ${{ github.workspace }}
           if [[ -d ${{ matrix.app }}/ansible ]]
