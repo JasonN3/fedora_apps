@@ -1,0 +1,12 @@
+maxretry = 3
+
+{% for device in devices %}
+
+
+[{{ device.name }}]
+  driver = "{{ device.driver }}"
+{% properties = device | combine({ 'name': omit, 'driver': omit' }) %}
+{% for key,value in properties }
+  {{ key }} = {{ value | quote}}
+{% endfor %}
+{% endfor %}

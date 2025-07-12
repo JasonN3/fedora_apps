@@ -6,7 +6,8 @@ on:
       APPS:
         value: '[
           "chrony",
-          "frr"
+          "frr",
+          "nut"
           ]'
       LIFECYCLE:
         value: '[
