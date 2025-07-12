@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Generate ups.conf
+      ansible.builtin.template:
+        src: ups.conf.j2
+        dest: "{{ rootfs }}/etc/ups/ups.conf"
+
+    - name: Generate upsd.users
+      ansible.builtin.template:
+        src: upsd.users.j2
+        dest: "{{ rootfs }}/etc/ups/upsd.users"
