@@ -6,7 +6,7 @@ maxretry = 3
 [{{ device.name }}]
   driver = "{{ device.driver }}"
 {% set properties = device | combine({ 'name': omit, 'driver': omit' }) %}
-{% for key,value in properties }
+{% for key,value in properties.items() }
   {{ key }} = {{ value | quote}}
 {% endfor %}
 {% endfor %}
