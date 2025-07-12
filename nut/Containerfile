@@ -1,6 +1,11 @@
 FROM registry.fedoraproject.org/fedora:42
 
-RUN dnf install -y nut
+RUN set -euo pipefail && \
+    dnf install -y --setopt=install_weak_deps=False --nodocs nut && \
+    dnf clean all -y && rm -rf /var/cache/dnf
+
+# copy rootfs content
+COPY rootfs/ /
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/upsd", "-F"]
