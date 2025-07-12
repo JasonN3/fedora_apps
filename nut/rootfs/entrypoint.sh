@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -f /etc/ups/nut.conf ]]
 then
-  source /etc/ups/nut.conf
+  export "$(grep -E '^[A-Za-z_]+=' /etc/ups/nut.conf)"
 fi
 
 mkdir -p /run/nut/upssched
