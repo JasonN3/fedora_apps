@@ -5,7 +5,7 @@ maxretry = 3
 
 [{{ device.name }}]
   driver = "{{ device.driver }}"
-{% set properties = device | combine({ 'name': omit, 'driver': omit }) %}
+{% set properties = device | community.general.remove_keys(['name', 'driver']) %}
 {% for key,value in properties.items() %}
   {{ key }} = {{ value | quote }}
 {% endfor %}
