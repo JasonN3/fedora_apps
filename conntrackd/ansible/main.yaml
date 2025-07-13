@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Generate conntrackd.conf
+      ansible.builtin.template:
+        src: conntrackd.conf.j2
+        dest: "{{ rootfs }}/etc/conntrackd/conntrackd.conf"
