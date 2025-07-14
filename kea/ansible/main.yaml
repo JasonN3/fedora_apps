@@ -10,6 +10,11 @@
         path: "{{ item }}"
         state: directory
 
+    - name: Generate entrypoint.sh
+      ansible.builtin.template:
+        src: entrypoint.sh.j2
+        dest: "{{ rootfs }}/entrypoint.sh"
+
     - name: Generate kea-dhcp4.conf
       ansible.builtin.template:
         src: kea-dhcp4.conf.j2
