@@ -36,7 +36,7 @@ fi
 
 if [[ -n "${TAG}" ]]
 then
-  sed -i "s/TAG/${TAG}/" /etc/kea/kea-dhcp4.conf
+  sed -i "s|TAG|${TAG}|" /etc/kea/kea-dhcp4.conf
 fi
 
 exec "$@"
