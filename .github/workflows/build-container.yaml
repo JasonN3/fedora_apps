@@ -88,7 +88,7 @@ jobs:
               -e "@configs/${{ matrix.app }}/ansible/vars.yaml" \
               "${{ matrix.app }}/ansible/main.yaml"
           fi
-          if [[ -f "${{ matrix.app }}/rootfs/entrypoint.sh"]]
+          if [[ -f "${{ matrix.app }}/rootfs/entrypoint.sh" ]]
           then
             chmod +x "${{ matrix.app }}/rootfs/entrypoint.sh"
           fi
