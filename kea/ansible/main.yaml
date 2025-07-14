@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}"
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/kea"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+
+    - name: Generate kea-dhcp4.conf
+      ansible.builtin.template:
+        src: kea-dhcp4.conf.j2
+        dest: "{{ rootfs }}/etc/kea/kea-dhcp4.conf"
