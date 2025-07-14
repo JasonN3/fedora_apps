@@ -1,11 +1,3 @@
-{% if mysql is not defined %}
-  {{ fail("mysql configuration is required") }}
-{% endif %}
-{% for required_var in ['database', 'username', 'password', 'host', 'port'] %}
-  {% if mysql[required_var] is not defined %}
-    {{ fail("mysql." + required_var + " is required") }}
-  {% endif %}
-{% endfor %}
 {
   "Dhcp4": {
     "server-tag": "TAG",
@@ -45,9 +37,6 @@
       "port":                {{ mysql.port }}
     },
     "interfaces-config": {
-{% if interfaces is not defined or interfaces|length == 0 %}
-  {% fail("interfaces list is required and cannot be empty") %}
-{% endif %}
       "interfaces": [ {{ interfaces | join(',') }} ]
     },
     "control-socket": {
