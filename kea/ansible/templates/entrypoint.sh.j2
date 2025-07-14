@@ -8,7 +8,7 @@ chmod 750 /run/kea
 [[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
 
 {% if mysql is defined %}
-if [[] $(basename $1) == "kea-dhcp4" ]]
+if [[ $(basename $1) == "kea-dhcp4" ]]
 then
   echo "Waiting for MySQL to become available..."
   MYSQL_WAIT_TIME=${MYSQL_WAIT_TIME:-5}
