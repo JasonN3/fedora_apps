@@ -2,7 +2,7 @@ FROM docker.io/library/alpine:3.22.0
 
 RUN apk update && \
     apk add --no-cache \
-      kea-dhcp4 kea-hook-mysql-cb kea-hook-ha
+      bash kea-dhcp4 kea-hook-mysql-cb kea-hook-ha
 
 COPY rootfs /
 

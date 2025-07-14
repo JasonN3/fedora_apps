@@ -1,23 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 mkdir /run/kea
 chown kea:kea /run/kea
 chmod 750 /run/kea
 
-[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
+[[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
 
 {% if mysql is defined %}
-if [ $(basename $1) == "kea-dhcp4" ]
+if [[] $(basename $1) == "kea-dhcp4" ]]
 then
   echo "Waiting for MySQL to become available..."
   MYSQL_WAIT_TIME=${MYSQL_WAIT_TIME:-5}
   MAX_RETRIES=${MAX_RETRIES:-60}
   RETRY_COUNT=0
   
-  while [ $RETRY_COUNT -lt $MAX_RETRIES ]
+  while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]
   do
-    if echo > /dev/tcp/{{ mysql.host }}/{{ mysql.port }} 2>/dev/null; then
+    if echo > /dev/tcp/{{ mysql.host }}/{{ mysql.port }} 2>/dev/null
+    then
       echo "MySQL is ready"
       break
     fi
@@ -26,13 +27,14 @@ then
     sleep $MYSQL_WAIT_TIME
   done
 fi
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]
+then
   echo "Error: MySQL did not become available within timeout"
   exit 1
 fi
 {% endif %}
 
-if [ -n "${TAG}" ]
+if [[ -n "${TAG}" ]]
 then
   sed -i "s/TAG/${TAG}/" /etc/kea/kea-dhcp4.conf
 fi
