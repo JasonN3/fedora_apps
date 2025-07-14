@@ -1,9 +1,9 @@
 {% if mysql is not defined %}
-  {% error "mysql configuration is required" %}
+  {{ fail("mysql configuration is required") }}
 {% endif %}
 {% for required_var in ['database', 'username', 'password', 'host', 'port'] %}
   {% if mysql[required_var] is not defined %}
-    {% error "mysql." + required_var + " is required" %}
+    {{ fail("mysql." + required_var + " is required") }}
   {% endif %}
 {% endfor %}
 {
@@ -46,7 +46,7 @@
     },
     "interfaces-config": {
 {% if interfaces is not defined or interfaces|length == 0 %}
-  {% error "interfaces list is required and cannot be empty" %}
+  {% fail("interfaces list is required and cannot be empty") %}
 {% endif %}
       "interfaces": [ {{ interfaces | join(',') }} ]
     },
