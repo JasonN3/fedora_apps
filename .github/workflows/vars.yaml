@@ -6,6 +6,7 @@ on:
       APPS:
         value: '[
           "chrony",
+          "conntrackd",
           "frr",
           "nut"
           ]'

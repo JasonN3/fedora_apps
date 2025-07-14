@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/conntrackd"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+
+    - name: Generate conntrackd.conf
+      ansible.builtin.template:
+        src: conntrackd.conf.j2
+        dest: "{{ rootfs }}/etc/conntrackd/conntrackd.conf"
