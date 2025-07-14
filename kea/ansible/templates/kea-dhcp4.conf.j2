@@ -5,10 +5,10 @@
         "config-databases": [
           {
             "type":     "mysql",
-            "name":     {{ mysql.database | quote }},
-            "user":     {{ mysql.username | quote }},
-            "password": {{ mysql.password | quote }},
-            "host":     {{ mysql.host     | quote }},
+            "name":     "{{ mysql.database }}",
+            "user":     "{{ mysql.username }}",
+            "password": "{{ mysql.password }}",
+            "host":     "{{ mysql.host     }}",
             "port":     {{ mysql.port }}
           }
         ],
@@ -19,10 +19,10 @@
       "reconnect-wait-time": 3000, // expressed in ms
       "max-reconnect-tries": 999,
       "on-fail":             "serve-retry-continue",
-      "name":                {{ mysql.database | quote }},
-      "user":                {{ mysql.username | quote }},
-      "password":            {{ mysql.password | quote }},
-      "host":                {{ mysql.host     | quote }},
+      "name":                "{{ mysql.database }}",
+      "user":                "{{ mysql.username }}",
+      "password":            "{{ mysql.password }}",
+      "host":                "{{ mysql.host     }}",
       "port":                {{ mysql.port }}
     },
     "lease-database": {
@@ -30,10 +30,10 @@
       "reconnect-wait-time": 3000, // expressed in ms
       "max-reconnect-tries": 999,
       "on-fail":             "serve-retry-continue",
-      "name":                {{ mysql.database | quote }},
-      "user":                {{ mysql.username | quote }},
-      "password":            {{ mysql.password | quote }},
-      "host":                {{ mysql.host     | quote }},
+      "name":                "{{ mysql.database }}",
+      "user":                "{{ mysql.username }}",
+      "password":            "{{ mysql.password }}",
+      "host":                "{{ mysql.host     }}",
       "port":                {{ mysql.port }}
     },
     "interfaces-config": {

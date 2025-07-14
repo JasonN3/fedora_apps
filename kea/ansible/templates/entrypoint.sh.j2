@@ -26,11 +26,11 @@ then
     echo "Attempt $RETRY_COUNT/$MAX_RETRIES: MySQL not ready, waiting..."
     sleep $MYSQL_WAIT_TIME
   done
-fi
-if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]
-then
-  echo "Error: MySQL did not become available within timeout"
-  exit 1
+  if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]
+  then
+    echo "Error: MySQL did not become available within timeout"
+    exit 1
+  fi
 fi
 {% endif %}
 
