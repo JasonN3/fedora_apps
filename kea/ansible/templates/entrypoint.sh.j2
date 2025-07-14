@@ -4,13 +4,13 @@ mkdir /run/kea
 chown kea:kea /run/kea
 chmod 750 /run/kea
 
-[[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
+[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
 
 {% if mysql is defined %}
-if [[ $(basename $1) == "kea-dhcp4" ]]
+if [ $(basename $1) == "kea-dhcp4" ]
 then
   echo > /dev/tcp/{{ mysql.host }}/{{ mysql.port }}
-  while [[ $? != 0 ]]
+  while [ $? != 0 ]
   do
     sleep 5
     echo > /dev/tcp/{{ mysql.host }}/{{ mysql.port }}
@@ -18,7 +18,7 @@ then
 fi
 {% endif %}
 
-if [[ -n "${TAG}" ]]
+if [ -n "${TAG}" ]
 then
   sed -i "s/TAG/${TAG}/" /etc/kea/kea-dhcp4.conf
 fi

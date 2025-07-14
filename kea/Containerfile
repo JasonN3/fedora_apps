@@ -1,6 +1,8 @@
 FROM docker.io/library/alpine:3.22.0
 
-RUN apk add kea-dhcp4 kea-hook-mysql-cb kea-hook-ha
+RUN apk update && \
+    apk add --no-cache \
+      kea-dhcp4 kea-hook-mysql-cb kea-hook-ha
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]
