@@ -1,0 +1,24 @@
+defaults
+    log     global
+    mode    tcp
+    option  tcplog
+    option  dontlognull
+    timeout connect 5000ms
+    timeout client  50000ms
+    timeout server  50000ms
+
+{% for frontend in frontends %}
+frontend {{ frontend.name }}
+    bind {{ frontend.address | default('*') }}:{{ frontend.port }}
+    mode tcp
+    default_backend {{ frontend.backend }}
+{% endfor %}
+
+{% for backend in backends %}
+backend {{ backend.name }}
+    mode tcp
+    balance roundrobin
+{% for server in backend.servers %}
+    server {{ server.name }} {{ server.address }}:{{ server.port }} check
+{% endfor %}
+{% endfor %}
