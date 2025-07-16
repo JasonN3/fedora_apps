@@ -80,6 +80,7 @@ jobs:
       - name: Generate rootfs
         env:
           OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
+          KEA_DB_PASSWORD: ${{ secrets.KEA_DB_PASSWORD }}
         run: |
           if [[ -d "${{ matrix.app }}/ansible" ]]
           then
