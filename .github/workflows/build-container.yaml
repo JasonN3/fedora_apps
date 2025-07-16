@@ -78,13 +78,12 @@ jobs:
           git checkout ${{ github.ref_name }} || true
 
       - name: Generate rootfs
-        env:
-          OSPF_PASSWORD: ${{ secrets.OSPF_PASSWORD }}
-          KEA_DB_PASSWORD: ${{ secrets.KEA_DB_PASSWORD }}
         run: |
           if [[ -d "${{ matrix.app }}/ansible" ]]
           then
+            echo ${{ secrets.CONFIG_VAULT }} > vault_pass
             ansible-playbook \
+              --vault-password-file vault_pass \
               -e "rootfs=$(pwd)/${{ matrix.app }}/rootfs" \
               -e "@configs/${{ matrix.app }}/ansible/vars.yaml" \
               "${{ matrix.app }}/ansible/main.yaml"
