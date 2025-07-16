@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-mkdir /run/kea
+if [[ ! -d /run/kea ]]
+then
+  mkdir /run/kea
+fi
 chown kea:kea /run/kea
 chmod 750 /run/kea
 
