@@ -36,6 +36,25 @@
       "host":                "{{ mysql.host     }}",
       "port":                {{ mysql.port }}
     },
+    "loggers": [
+      {
+        "name": "kea-dhcp4",
+        "output_options": [
+          {
+            "output": "stdout"
+          }
+        ]
+      },
+      {
+        "name": "kea-dhcp4.dctl",
+        "severity": "WARN",
+        "output_options": [
+          {
+            "output": "stdout"
+          }
+        ]
+      }
+    ],
     "interfaces-config": {
       "interfaces": {{ interfaces | to_json }}
     },
