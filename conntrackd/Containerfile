@@ -1,0 +1,10 @@
+FROM registry.fedoraproject.org/fedora:42
+
+RUN set -euo pipefail && \
+    dnf install -y --setopt=install_weak_deps=False --nodocs conntrack-tools && \
+    dnf clean all -y && rm -rf /var/cache/dnf
+
+COPY rootfs /
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["conntrackd"]

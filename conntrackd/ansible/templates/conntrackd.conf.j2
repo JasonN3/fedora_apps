@@ -1,0 +1,35 @@
+Sync {
+  Mode FTFW {
+    StartupResync yes
+  }
+  Multicast {
+    IPv4_address {{ broadcast_address }}
+    Group {{ broadcast_group }}
+    Interface {{ broadcast_interface }}
+    SndSocketBuffer 1249280
+    RcvSocketBuffer 1249280
+    Checksum on
+  }
+}
+
+General {
+  Nice -20
+  HashSize 32768
+  HashLimit 131072
+  LogFile on
+  LockFile /var/lock/conntrack.lock
+  UNIX {
+    Path /var/run/conntrackd.ctl
+    Backlog 20
+  }
+  NetlinkBufferSize 2097152
+  NetlinkBufferSizeMaxGrowth 8388608
+  Filter From Userspace {
+    Address Ignore {
+      IPv4_address 127.0.0.1
+{% for address in ignore_addresses %}
+      IPv4_address {{ address }}
+{% endfor %}
+    }
+  }
+}
