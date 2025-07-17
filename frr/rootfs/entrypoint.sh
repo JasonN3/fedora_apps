@@ -2,8 +2,7 @@
 
 # Validate ROUTER environment variable
 if [[ -z "${ROUTER:-}" ]]; then
-  echo "ERROR: ROUTER environment variable must be set" >&2
-  exit 1
+  ROUTER=$(hostname -s)
 fi
 
 # Verify the configuration files exist
