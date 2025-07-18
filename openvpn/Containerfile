@@ -10,7 +10,6 @@ RUN apk update && \
     apk add openvpn
 
 COPY rootfs /
-# Fix location and possibly command
 COPY --from=downloader /tmp/openvpn-auth-oauth2 /usr/local/bin/
 
 ENTRYPOINT ["/entrypoint.sh"]
