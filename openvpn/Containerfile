@@ -7,7 +7,7 @@ RUN tar -xC /tmp -f /tmp/openvpn-auth-oauth2.tar.xz
 FROM docker.io/library/alpine:3.22.1
 
 RUN apk update && \
-    apk add openvpn
+    apk add dumb-init openvpn
 
 COPY rootfs /
 COPY --from=downloader /tmp/openvpn-auth-oauth2 /usr/local/bin/
