@@ -10,7 +10,8 @@ on:
           "frr",
           "haproxy",
           "kea",
-          "nut"
+          "nut",
+          "openvpn"
           ]'
       LIFECYCLE:
         value: '[

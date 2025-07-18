@@ -1,0 +1,18 @@
+http:
+  listen: ":9000"
+  baseurl: "{{ baseurl }}"
+openvpn:
+  addr: "unix:///run/openvpn/server.sock"
+  password: "<password>"
+
+oauth2:
+  issuer: "https://login.microsoftonline.com/{{ tenantid}}/v2.0"
+  client:
+    id: "{{ clientid }}"
+    secret: "{{ clientsecret }}"
+  # The scopes openid profile are required, but configured by default.
+  # offline_access is required for non-interactive session refresh.
+  #scopes:
+  #  - "openid"
+  #  - "profile"
+  #  - "offline_access"

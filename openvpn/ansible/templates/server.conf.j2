@@ -1,0 +1,42 @@
+port {{ port }}
+proto {{ protocol }}
+dev tun
+
+ca /etc/openvpn/ca.cer
+cert /etc/openvpn/cert.pem
+key /etc/openvpn/cert.key
+dh /etc/openvpn/dh.pem
+
+topology subnet
+{% if subnet4 is defined %}
+server {{ subnet4 }}
+{% endif %}
+{% if subnet6 is defined %}
+server-ipv6 {{ subnet6 }}
+{% endif %}
+
+ifconfig-pool-persist /run/openvpn/ipp.txt
+
+username-as-common-name
+script-security 2
+{% if dccd is defined %}
+client-connect {{ dccd }}
+{% endif %}
+{% if learncmd is defined %}
+learn-address {{ learncmd }}
+{% endif %}
+
+{% for rule in push %}
+push "{{ rule }}"
+{% endfor %}
+
+duplicate-cn
+keepalive 10 120
+
+explicit-exit-notify 1
+
+# oauth
+management /run/openvpn/server.sock unix /etc/openvpn/password.txt
+management-client-auth
+auth-user-pass-optional
+auth-gen-token {{ token_ttl }} external-auth

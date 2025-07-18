@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}"
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/openvpn"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+    
+    - name: Generate server.conf
+      ansible.builtin.template:
+        src: server.conf.j2
+        dest: "{{ rootfs }}/etc/openvpn/server.conf"
