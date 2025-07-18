@@ -3,10 +3,10 @@ http:
   baseurl: "{{ baseurl }}"
 openvpn:
   addr: "unix:///run/openvpn/server.sock"
-  password: "<password>"
+  password: file:///etc/openvpn/mgmt.txt
 
 oauth2:
-  issuer: "https://login.microsoftonline.com/{{ tenantid}}/v2.0"
+  issuer: "https://login.microsoftonline.com/{{ tenantid }}/v2.0"
   client:
     id: "{{ clientid }}"
     secret: "{{ clientsecret }}"

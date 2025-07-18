@@ -36,7 +36,7 @@ keepalive 10 120
 explicit-exit-notify 1
 
 # oauth
-management /run/openvpn/server.sock unix /etc/openvpn/password.txt
+management /run/openvpn/server.sock unix /etc/openvpn/mgmt.txt
 management-client-auth
 auth-user-pass-optional
 auth-gen-token {{ token_ttl }} external-auth
