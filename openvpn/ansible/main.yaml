@@ -22,3 +22,8 @@
         src: openvpn-auth-oauth2.yaml.j2
         dest: "{{ rootfs }}/etc/openvpn/openvpn-auth-oauth2.yaml"
         mode: '0644'
+
+    - name: Generate random mgmt password
+      ansible.builtin.copy:
+        content: "{{ lookup('community.general.random_string', length=64) }}"
+        dest: "{{ rootfs }}/etc/openvpn/mgmt.txt"
