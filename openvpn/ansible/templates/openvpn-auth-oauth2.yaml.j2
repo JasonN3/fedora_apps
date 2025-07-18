@@ -1,7 +1,7 @@
 http:
   listen: ":9000"
   baseurl: "{{ baseurl }}"
-  secret: "{{ lookup('community.general.random_string', length=32) }}"
+  secret: {{ lookup('community.general.random_string', length=32) | quote }}
 openvpn:
   addr: "unix:///run/openvpn/server.sock"
   password: file:///etc/openvpn/mgmt.txt
