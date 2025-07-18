@@ -11,7 +11,7 @@ RUN apk update && \
 
 COPY rootfs /
 # Fix location and possibly command
-COPY --from=downloader /tmp/openvpn-auth-oauth2 /etc/opevpn/
+COPY --from=downloader /tmp/openvpn-auth-oauth2 /usr/local/bin/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/openvpn", "--config", "/etc/openvpn/server.conf"]

@@ -26,9 +26,11 @@ client-connect {{ dccd }}
 learn-address {{ learncmd }}
 {% endif %}
 
+{% if push is defined %}
 {% for rule in push %}
 push "{{ rule }}"
 {% endfor %}
+{% endif %}
 
 duplicate-cn
 keepalive 10 120

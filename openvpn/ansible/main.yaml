@@ -9,8 +9,16 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-    
+        mode: '0755'
+
     - name: Generate server.conf
       ansible.builtin.template:
         src: server.conf.j2
         dest: "{{ rootfs }}/etc/openvpn/server.conf"
+        mode: '0644'
+
+    - name: Generate openvpn-auth-oauth2.yaml
+      ansible.builtin.template:
+        src: openvpn-auth-oauth2.yaml.j2
+        dest: "{{ rootfs }}/etc/openvpn/openvpn-auth-oauth2.yaml"
+        mode: '0644'
