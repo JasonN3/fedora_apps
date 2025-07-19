@@ -1,5 +1,7 @@
 #!/usr/bin/dumb-init /bin/sh
 
+set -ex
+
 {% if openvpn.caUrl is defined %}
 wget -O /etc/openvpn/ca.pem "{{ openvpn.caUrl }}"
 {% endif %}
@@ -10,6 +12,7 @@ then
 fi
 
 # start OpenVPN
+echo "Starting $1"
 "$@" &
 
 # start auth helper
