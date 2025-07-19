@@ -1,16 +1,16 @@
 http:
   listen: ":9000"
-  baseurl: "{{ baseurl }}"
+  baseurl: "{{ oauth.baseurl }}"
   secret: "{{ lookup('community.general.random_string', length=32, special=false) }}"
 openvpn:
   addr: "unix:///run/openvpn/server.sock"
   password: file:///etc/openvpn/mgmt.txt
 
 oauth2:
-  issuer: "https://login.microsoftonline.com/{{ tenantid }}/v2.0"
+  issuer: "https://login.microsoftonline.com/{{ oauth.tenantid }}/v2.0"
   client:
-    id: "{{ clientid }}"
-    secret: "{{ clientsecret }}"
+    id: "{{ oauth.clientid }}"
+    secret: "{{ oauth.clientsecret }}"
   # The scopes openid profile are required, but configured by default.
   # offline_access is required for non-interactive session refresh.
   #scopes:

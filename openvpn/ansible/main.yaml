@@ -11,17 +11,24 @@
         state: directory
         mode: '0755'
 
-    - name: Generate server.conf
+    - name: Generate {{ item.src | splitext | first }}
+      loop:
+        - src: entrypoint.sh.j2
+          dst: entrypoint.sh
+        - src: server.conf.j2
+          dst: etc/openvpn/server.conf
+        - src: openvpn-auth-oauth2.yaml
+          dst: etc/openvpn/openvpn-auth-oauth2.yaml
       ansible.builtin.template:
-        src: server.conf.j2
-        dest: "{{ rootfs }}/etc/openvpn/server.conf"
-        mode: '0644'
+        src: "{{ item.src }}"
+        dest: "{{ rootfs }}/{{ item.dst }}"
+        mode: "{{ item.mode | default('0644') }}"
 
-    - name: Generate openvpn-auth-oauth2.yaml
-      ansible.builtin.template:
-        src: openvpn-auth-oauth2.yaml.j2
-        dest: "{{ rootfs }}/etc/openvpn/openvpn-auth-oauth2.yaml"
-        mode: '0644'
+    - name: Write CA Certificate
+      when: ca is defined
+      ansible.builtin.copy:
+        content: "{{ ca }}"
+        dest: "{{ rootfs }}/etc/openvpn/ca.pem"
 
     - name: Generate random mgmt password
       ansible.builtin.copy:

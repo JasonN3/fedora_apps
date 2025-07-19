@@ -1,9 +1,15 @@
+# Download Auth Helper
 FROM docker.io/library/alpine:3.22.1 as downloader
 
 # Fix url to be dynamic and handle different architectures
 RUN wget -O /tmp/openvpn-auth-oauth2.tar.xz  https://github.com/jkroepke/openvpn-auth-oauth2/releases/download/v1.24.1/openvpn-auth-oauth2_1.24.1_linux_amd64.tar.xz
 RUN tar -xC /tmp -f /tmp/openvpn-auth-oauth2.tar.xz
 
+# Generate DHParams
+FROM docker.io/alpine/openssl:3.5.1 as dhparams
+RUN openssl dhparam -out /dhparams.pem 4096
+
+# Create final image
 FROM docker.io/library/alpine:3.22.1
 
 RUN apk update && \
@@ -11,6 +17,7 @@ RUN apk update && \
 
 COPY rootfs /
 COPY --from=downloader /tmp/openvpn-auth-oauth2 /usr/local/bin/
+COPY --from=dhparams /dhparams.pem /etc/openvpn/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/openvpn", "--config", "/etc/openvpn/server.conf"]

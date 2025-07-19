@@ -1,33 +1,34 @@
-port {{ port }}
-proto {{ protocol }}
+mode server
+port {{ openvpn.port }}
+proto {{ openvpn.protocol }}
 dev tun
 
-ca /etc/openvpn/ca.cer
+ca /etc/openvpn/ca.pem
 cert /etc/openvpn/cert.pem
 key /etc/openvpn/cert.key
-dh /etc/openvpn/dh.pem
+dh /etc/openvpn/dhparams.pem
 
 topology subnet
-{% if subnet4 is defined %}
-server {{ subnet4 }}
+{% if openvpn.subnet4 is defined %}
+server {{ openvpn.subnet4 }}
 {% endif %}
-{% if subnet6 is defined %}
-server-ipv6 {{ subnet6 }}
+{% if openvpn.subnet6 is defined %}
+server-ipv6 {{ openvpn.subnet6 }}
 {% endif %}
 
 ifconfig-pool-persist /run/openvpn/ipp.txt
 
 username-as-common-name
 script-security 2
-{% if dccd is defined %}
-client-connect {{ dccd }}
+{% if openvpn.dccd is defined %}
+client-connect {{ openvpn.dccd }}
 {% endif %}
-{% if learncmd is defined %}
-learn-address {{ learncmd }}
+{% if openvpn.learncmd is defined %}
+learn-address {{ openvpn.learncmd }}
 {% endif %}
 
-{% if push is defined %}
-{% for rule in push %}
+{% if openvpn.push is defined %}
+{% for rule in openvpn.push %}
 push "{{ rule }}"
 {% endfor %}
 {% endif %}
@@ -41,4 +42,4 @@ explicit-exit-notify 1
 management /run/openvpn/server.sock unix /etc/openvpn/mgmt.txt
 management-client-auth
 auth-user-pass-optional
-auth-gen-token {{ token_ttl }} external-auth
+auth-gen-token {{ oauth.token_ttl }} external-auth
