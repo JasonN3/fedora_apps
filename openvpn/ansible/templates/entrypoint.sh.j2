@@ -13,9 +13,9 @@ fi
 
 # start OpenVPN
 echo "Starting $1"
-"$@" &
+"$@" &> /tmp/$(basename $1) &
 
 # start auth helper
-/usr/local/bin/openvpn-auth-oauth2 --config "/etc/openvpn/openvpn-auth-oauth2.yaml" &
+/usr/local/bin/openvpn-auth-oauth2 --config "/etc/openvpn/openvpn-auth-oauth2.yaml" &> /tmp/openvpn-auth-oauth2 &
 
-fg %1
+tail -f /tmp/$(basename $1) /tmp/openvpn-auth-oauth2
