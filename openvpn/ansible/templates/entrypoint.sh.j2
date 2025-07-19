@@ -4,6 +4,11 @@
 wget -O /etc/openvpn/ca.pem "{{ openvpn.caUrl }}"
 {% endif %}
 
+if [[ ! -d /run/openvpn ]]
+then
+  mkdir /run/openvpn
+fi
+
 # start OpenVPN
 "$@" &
 
