@@ -1,0 +1,37 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}"
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/openvpn"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+
+    - name: Generate Files
+      loop:
+        - file: entrypoint.sh
+          dest: /
+        - file: server.conf
+          dest: /etc/openvpn
+        - file: openvpn-auth-oauth2.yaml
+          dest: /etc/openvpn
+      ansible.builtin.template:
+        src: "{{ item.file }}.j2"
+        dest: "{{ rootfs }}{{ item.dest }}/{{ item.file }}"
+        mode: "{{ item.mode | default('0644') }}"
+
+    - name: Write CA Certificate
+      when: ca is defined
+      ansible.builtin.copy:
+        content: "{{ ca }}"
+        dest: "{{ rootfs }}/etc/openvpn/ca.pem"
+
+    - name: Generate random mgmt password
+      ansible.builtin.copy:
+        content: "{{ lookup('community.general.random_string', length=64) }}"
+        dest: "{{ rootfs }}/etc/openvpn/mgmt.txt"
+        mode: 400

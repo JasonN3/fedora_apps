@@ -1,0 +1,21 @@
+#!/usr/bin/dumb-init /bin/sh
+
+set -ex
+
+{% if openvpn.caUrl is defined %}
+wget -O /etc/openvpn/ca.pem "{{ openvpn.caUrl }}"
+{% endif %}
+
+if [[ ! -d /run/openvpn ]]
+then
+  mkdir /run/openvpn
+fi
+
+# start OpenVPN
+echo "Starting $1"
+"$@" &> /tmp/$(basename $1) &
+
+# start auth helper
+/usr/local/bin/openvpn-auth-oauth2 --config "/etc/openvpn/openvpn-auth-oauth2.yaml" &> /tmp/openvpn-auth-oauth2 &
+
+tail -f /tmp/$(basename $1) /tmp/openvpn-auth-oauth2
