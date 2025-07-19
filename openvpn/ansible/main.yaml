@@ -11,17 +11,17 @@
         state: directory
         mode: '0755'
 
-    - name: Generate {{ item.src | splitext | first }}
+    - name: Generate Files
       loop:
-        - src: entrypoint.sh.j2
-          dst: entrypoint.sh
-        - src: server.conf.j2
-          dst: etc/openvpn/server.conf
-        - src: openvpn-auth-oauth2.yaml
-          dst: etc/openvpn/openvpn-auth-oauth2.yaml
+        - file: entrypoint.sh
+          dest: /
+        - file: server.conf
+          dest: /etc/openvpn
+        - file: openvpn-auth-oauth2.yaml
+          dest: /etc/openvpn
       ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ rootfs }}/{{ item.dst }}"
+        src: "{{ item.file }}.j2"
+        dest: "{{ rootfs }}{{ item.dest }}/{{ item.file }}"
         mode: "{{ item.mode | default('0644') }}"
 
     - name: Write CA Certificate
