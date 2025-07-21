@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}"
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/wireguard"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+
+    - name: Generate wg0.conf
+      ansible.builtin.template:
+        src: wg0.conf.j2
+        dest: "{{ rootfs }}/etc/wireguard/wg0.conf"

@@ -1,0 +1,9 @@
+FROM docker.io/library/alpine:3.22.0
+
+RUN apk update && \
+    apk add wireguard-tools
+
+COPY rootfs /
+
+ENTRYPOINT ["/usr/bin/wg-quick"]
+CMD ["wg0"]

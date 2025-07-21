@@ -1,0 +1,18 @@
+[Interface]
+Address={{ server.address }}
+ListenPort={{ server.port }}
+PrivateKey={{ server.privateKey }}
+
+{% for peer in peers %}
+# {{ peer.name }}
+[Peer]
+PublicKey={{ peer.publicKey }}
+{% if peer.psk is defined %}
+PreSharedKey={{ peer.psk }}
+{% endif %}
+{% if peer.allowedIPs is string %}
+AllowedIPs={{ peer.allowedIPs }} 
+{% elif peer.allowedIPs is sequence %}
+AllowedIPs={{ peer.allowedIPs | join(',') }}
+{% endif %}                                                                                
+{% endfor %}
