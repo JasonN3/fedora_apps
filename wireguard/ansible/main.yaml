@@ -1,5 +1,7 @@
 ---
 - hosts: localhost
+  connection: local
+  gather_facts: false
   tasks:
     - name: Ensure directories are created
       loop:
@@ -14,3 +16,4 @@
       ansible.builtin.template:
         src: wg0.conf.j2
         dest: "{{ rootfs }}/etc/wireguard/wg0.conf"
+        mode: "0600"

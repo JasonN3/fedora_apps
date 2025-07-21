@@ -1,9 +1,9 @@
 FROM docker.io/library/alpine:3.22.0
 
-RUN apk update && \
-    apk add wireguard-tools
+RUN apk add --no-cache wireguard-tools
 
 COPY rootfs /
+RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/usr/bin/wg-quick"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["wg0"]
