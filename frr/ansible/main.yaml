@@ -11,6 +11,7 @@
         - "{{ rootfs }}/etc/frr"
 
     - name: Create FRR configuration file
+      no_log: true
       ansible.builtin.template:
         src: frr.conf.j2
         dest: "{{ rootfs }}/etc/frr/frr.{{ item.key }}.conf"
@@ -18,9 +19,11 @@
         lstrip_blocks: true
       loop: "{{ routers | dict2items }}"
       loop_control:
+        extended: true
         label: "router {{ ansible_loop.index }}"
 
     - name: Create FRR daemons file
+      no_log: true
       ansible.builtin.template:
         src: daemons.j2
         dest: "{{ rootfs }}/etc/frr/daemons.{{ item.key }}"
@@ -28,5 +31,6 @@
         lstrip_blocks: true
       loop: "{{ routers | dict2items }}"
       loop_control:
+        extended: true
         label: "router {{ ansible_loop.index }}"
 
