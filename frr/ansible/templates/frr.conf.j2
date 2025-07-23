@@ -65,9 +65,11 @@ router bgp {{ bgp.asn }}
       {% endif %}
     {% endfor %}
  address-family ipv4 unicast
-    {% for summary in bgp.summaries %}
+    {% if bgp.summaries is defined %}
+      {% for summary in bgp.summaries %}
   aggregate-address {{ summary }} summary-only
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
     {% for redistribute in bgp.redistribute %}
   redistribute {{ redistribute }}
     {% endfor %}
@@ -75,17 +77,19 @@ router bgp {{ bgp.asn }}
 exit
   {% endfor %}
 !
-  {% for ospf in router_info.router.ospf %}
+  {% if router_info.router.ospf is defined %}
+    {% for ospf in router_info.router.ospf %}
 router ospf
  router-id {{ router_info.id }}
-    {% for redistribute in ospf.redistribute %}
+      {% for redistribute in ospf.redistribute %}
  redistribute {{ redistribute }}
-    {% endfor %}
-    {% for network in ospf.networks %}
+      {% endfor %}
+      {% for network in ospf.networks %}
  network {{ network }} area 0
-    {% endfor %}
+      {% endfor %}
 exit
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 !
   {% if 'mpls' in router_info %}
 mpls ldp
