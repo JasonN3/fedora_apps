@@ -40,11 +40,13 @@ exit
 router bgp {{ bgp.asn }}
  bgp router-id {{ router_info.id }}
  bgp graceful-restart
-    {% for group in bgp.neighbors.groups %}
+    {% if bgp.neighbors.groups is defined %}
+      {% for group in bgp.neighbors.groups %}
  neighbor {{ group.name }} peer-group
  neighbor {{ group.name }} remote-as {{ group.asn }}
  bgp listen range {{ group.cidr }} peer-group {{ group.name }}
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
     {% for router in bgp.neighbors.routers %}
  neighbor {{ router.address }} remote-as {{ router.asn }}
       {% if 'bfd' in router and router.bfd %}
