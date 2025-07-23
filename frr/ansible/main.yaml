@@ -1,5 +1,32 @@
 ---
 - hosts: localhost
   remote_user: root
-  roles:
-    - frr
+  tasks:
+    - name: Create config directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ rootfs }}/etc"
+        - "{{ rootfs }}/etc/frr"
+
+    - name: Create FRR configuration file
+      ansible.builtin.template:
+        src: frr.conf.j2
+        dest: "{{ rootfs }}/etc/frr/frr.{{ item.key }}.conf"
+        trim_blocks: true
+        lstrip_blocks: true
+      loop: "{{ routers | dict2items }}"
+      loop_control:
+        label: "router {{ ansible_loop.index }}"
+
+    - name: Create FRR daemons file
+      ansible.builtin.template:
+        src: daemons.j2
+        dest: "{{ rootfs }}/etc/frr/daemons.{{ item.key }}"
+        trim_blocks: true
+        lstrip_blocks: true
+      loop: "{{ routers | dict2items }}"
+      loop_control:
+        label: "router {{ ansible_loop.index }}"
+
