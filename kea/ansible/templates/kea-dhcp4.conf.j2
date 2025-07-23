@@ -16,8 +16,7 @@
     },
     "hosts-database": {
       "type":                "mysql",
-      "reconnect-wait-time": 3000, // expressed in ms
-      "max-reconnect-tries": 5,
+      "max-reconnect-tries": 0,
       "on-fail":             "serve-retry-exit",
       "name":                "{{ mysql.database }}",
       "user":                "{{ mysql.username }}",
@@ -27,8 +26,7 @@
     },
     "lease-database": {
       "type":                "mysql",
-      "reconnect-wait-time": 3000, // expressed in ms
-      "max-reconnect-tries": 5,
+      "max-reconnect-tries": 0,
       "on-fail":             "serve-retry-exit",
       "name":                "{{ mysql.database }}",
       "user":                "{{ mysql.username }}",
@@ -39,7 +37,7 @@
     "loggers": [
       {
         "name": "kea-dhcp4",
-        "severity": "DEBUG",
+        "severity": "INFO",
         "output_options": [
           {
             "output": "stdout"
@@ -48,7 +46,7 @@
       },
       {
         "name": "kea-dhcp4.dctl",
-        "severity": "INFO",
+        "severity": "WARN",
         "output_options": [
           {
             "output": "stdout"
