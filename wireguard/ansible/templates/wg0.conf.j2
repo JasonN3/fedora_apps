@@ -2,6 +2,10 @@
 Address={{ server.address }}
 ListenPort={{ server.port }}
 PrivateKey={{ server.privateKey }}
+Table=off
+{% for pu in postUp %}
+PostUp={{ pu }}
+{% endfor %}
 
 {% for peer in peers %}
 # {{ peer.name }}

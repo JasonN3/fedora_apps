@@ -81,9 +81,11 @@ exit
     {% for ospf in router_info.router.ospf %}
 router ospf
  router-id {{ router_info.id }}
-      {% for redistribute in ospf.redistribute %}
+      {% if ospf.redistribute is defined %}
+        {% for redistribute in ospf.redistribute %}
  redistribute {{ redistribute }}
-      {% endfor %}
+        {% endfor %}
+      {% endif %}
       {% for network in ospf.networks %}
  network {{ network }} area 0
       {% endfor %}
