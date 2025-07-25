@@ -80,6 +80,7 @@ exit
   {% if router_info.router.ospf is defined %}
     {% for ospf in router_info.router.ospf %}
 router ospf
+ graceful-restart
  router-id {{ router_info.id }}
       {% if ospf.redistribute is defined %}
         {% for redistribute in ospf.redistribute %}
