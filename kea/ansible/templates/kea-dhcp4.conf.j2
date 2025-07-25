@@ -1,0 +1,70 @@
+{
+  "Dhcp4": {
+    "server-tag": "TAG",
+    "config-control": {
+        "config-databases": [
+          {
+            "type":     "mysql",
+            "name":     "{{ mysql.database }}",
+            "user":     "{{ mysql.username }}",
+            "password": "{{ mysql.password }}",
+            "host":     "{{ mysql.host     }}",
+            "port":     {{ mysql.port }}
+          }
+        ],
+        "config-fetch-wait-time": 20
+    },
+    "hosts-database": {
+      "type":                "mysql",
+      "max-reconnect-tries": 0,
+      "on-fail":             "serve-retry-exit",
+      "name":                "{{ mysql.database }}",
+      "user":                "{{ mysql.username }}",
+      "password":            "{{ mysql.password }}",
+      "host":                "{{ mysql.host     }}",
+      "port":                {{ mysql.port }}
+    },
+    "lease-database": {
+      "type":                "mysql",
+      "max-reconnect-tries": 0,
+      "on-fail":             "serve-retry-exit",
+      "name":                "{{ mysql.database }}",
+      "user":                "{{ mysql.username }}",
+      "password":            "{{ mysql.password }}",
+      "host":                "{{ mysql.host     }}",
+      "port":                {{ mysql.port }}
+    },
+    "loggers": [
+      {
+        "name": "kea-dhcp4",
+        "severity": "INFO",
+        "output_options": [
+          {
+            "output": "stdout"
+          }
+        ]
+      },
+      {
+        "name": "kea-dhcp4.dctl",
+        "severity": "WARN",
+        "output_options": [
+          {
+            "output": "stdout"
+          }
+        ]
+      }
+    ],
+    "interfaces-config": {
+      "interfaces": {{ interfaces | to_json }}
+    },
+    "control-socket": {
+        "socket-type": "unix",
+        "socket-name": "/run/kea/kea4-ctrl-socket"
+    },
+    "hooks-libraries": [
+      {
+        "library": "/usr/lib/kea/hooks/libdhcp_mysql_cb.so"
+      }
+    ]
+  }
+}

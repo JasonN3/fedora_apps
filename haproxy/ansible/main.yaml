@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Ensure directories are created
+      loop:
+        - "{{ rootfs }}"
+        - "{{ rootfs }}/usr"
+        - "{{ rootfs }}/usr/local"
+        - "{{ rootfs }}/usr/local/etc"
+        - "{{ rootfs }}/usr/local/etc/haproxy"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+
+    - name: Generate haproxy.cfg
+      ansible.builtin.template:
+        src: haproxy.cfg.j2
+        dest: "{{ rootfs }}/usr/local/etc/haproxy/haproxy.cfg"

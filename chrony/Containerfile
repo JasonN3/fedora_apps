@@ -2,5 +2,5 @@ FROM docker.io/dockurr/chrony:4.7
 
 ADD rootfs/ /
 
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/chronyd", "-u", "chrony", "-n", "-s", "-x"]
