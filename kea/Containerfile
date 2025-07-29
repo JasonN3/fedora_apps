@@ -1,6 +1,6 @@
 FROM docker.io/library/fedora:42
 
-RUN dnf install -y kea hea-hooks
+RUN dnf install -y kea kea-hooks
       #bash kea-dhcp4 kea-hook-pgsql-cb kea-hook-ha
 
 COPY rootfs /
