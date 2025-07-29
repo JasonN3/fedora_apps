@@ -1,18 +1,18 @@
 ---
 - hosts: localhost
   tasks:
-    - name: Validate MySQL configuration
+    - name: Validate PostgreSQL configuration
       ansible.builtin.assert:
         that:
-          - mysql is defined
-          - mysql.database is defined
-          - mysql.username is defined
-          - mysql.password is defined
-          - mysql.host is defined
-          - mysql.port is defined
+          - postgresql is defined
+          - postgresql.database is defined
+          - postgresql.username is defined
+          - postgresql.password is defined
+          - postgresql.host is defined
+          - postgresql.port is defined
           - interfaces is defined
           - interfaces|length > 0
-        fail_msg: "All MySQL configuration variables must be defined"
+        fail_msg: "All PostgreSQL configuration variables must be defined"
 
     - name: Ensure directories are created
       loop:
