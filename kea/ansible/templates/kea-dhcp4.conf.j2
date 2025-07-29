@@ -4,35 +4,35 @@
     "config-control": {
         "config-databases": [
           {
-            "type":     "mysql",
-            "name":     "{{ mysql.database }}",
-            "user":     "{{ mysql.username }}",
-            "password": "{{ mysql.password }}",
-            "host":     "{{ mysql.host     }}",
-            "port":     {{ mysql.port }}
+            "type":     "postgresql",
+            "name":     "{{ postgresql.database }}",
+            "user":     "{{ postgresql.username }}",
+            "password": "{{ postgresql.password }}",
+            "host":     "{{ postgresql.host     }}",
+            "port":     {{ postgresql.port }}
           }
         ],
         "config-fetch-wait-time": 20
     },
     "hosts-database": {
-      "type":                "mysql",
+      "type":                "postgresql",
       "max-reconnect-tries": 0,
       "on-fail":             "serve-retry-exit",
-      "name":                "{{ mysql.database }}",
-      "user":                "{{ mysql.username }}",
-      "password":            "{{ mysql.password }}",
-      "host":                "{{ mysql.host     }}",
-      "port":                {{ mysql.port }}
+      "name":                "{{ postgresql.database }}",
+      "user":                "{{ postgresql.username }}",
+      "password":            "{{ postgresql.password }}",
+      "host":                "{{ postgresql.host     }}",
+      "port":                {{ postgresql.port }}
     },
     "lease-database": {
-      "type":                "mysql",
+      "type":                "postgresql",
       "max-reconnect-tries": 0,
       "on-fail":             "serve-retry-exit",
-      "name":                "{{ mysql.database }}",
-      "user":                "{{ mysql.username }}",
-      "password":            "{{ mysql.password }}",
-      "host":                "{{ mysql.host     }}",
-      "port":                {{ mysql.port }}
+      "name":                "{{ postgresql.database }}",
+      "user":                "{{ postgresql.username }}",
+      "password":            "{{ postgresql.password }}",
+      "host":                "{{ postgresql.host     }}",
+      "port":                {{ postgresql.port }}
     },
     "loggers": [
       {
@@ -63,7 +63,7 @@
     },
     "hooks-libraries": [
       {
-        "library": "/usr/lib/kea/hooks/libdhcp_mysql_cb.so"
+        "library": "/usr/lib/kea/hooks/libdhcp_pgsql_cb.so"
       }
     ]
   }
