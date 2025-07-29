@@ -10,28 +10,28 @@ chmod 750 /run/kea
 
 [[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
 
-{% if mysql is defined %}
+{% if postgresql is defined %}
 if [[ $(basename $1) == "kea-dhcp4" ]]
 then
-  echo "Waiting for MySQL to become available..."
-  MYSQL_WAIT_TIME=${MYSQL_WAIT_TIME:-5}
+  echo "Waiting for PostgreSQL to become available..."
+  PSQL_WAIT_TIME=${PSQL_WAIT_TIME:-5}
   MAX_RETRIES=${MAX_RETRIES:-60}
   RETRY_COUNT=0
   
   while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]
   do
-    if echo > /dev/tcp/{{ mysql.host }}/{{ mysql.port }} 2>/dev/null
+    if echo > /dev/tcp/{{ postgresql.host }}/{{ postgresql.port }} 2>/dev/null
     then
-      echo "MySQL is ready"
+      echo "PSQL is ready"
       break
     fi
     RETRY_COUNT=$((RETRY_COUNT + 1))
-    echo "Attempt $RETRY_COUNT/$MAX_RETRIES: MySQL not ready, waiting..."
-    sleep $MYSQL_WAIT_TIME
+    echo "Attempt $RETRY_COUNT/$MAX_RETRIES: PSQL not ready, waiting..."
+    sleep $PGSQL_WAIT_TIME
   done
   if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]
   then
-    echo "Error: MySQL did not become available within timeout"
+    echo "Error: PSQL did not become available within timeout"
     exit 1
   fi
 fi
