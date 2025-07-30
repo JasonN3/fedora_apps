@@ -59,11 +59,11 @@
     },
     "control-socket": {
         "socket-type": "unix",
-        "socket-name": "/var/run/kea/kea4-ctrl-socket"
+        "socket-name": "/run/kea/kea4-ctrl-socket"
     },
     "hooks-libraries": [
       {
-        "library": "/usr/lib64/kea/hooks/libdhcp_pgsql.so"
+        "library": "/usr/lib/kea/hooks/libdhcp_pgsql_cb.so"
       }
     ]
   }

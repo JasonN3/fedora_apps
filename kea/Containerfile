@@ -1,7 +1,7 @@
-FROM docker.io/library/fedora:42
+FROM docker.io/library/alpine:3.22.0
 
-RUN dnf install -y kea kea-hooks
-      #bash kea-dhcp4 kea-hook-pgsql-cb kea-hook-ha
+RUN apk add --no-cache \
+      bash kea-dhcp4 kea-hook-pgsql-cb kea-hook-ha
 
 COPY rootfs /
 

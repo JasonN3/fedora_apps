@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-if [[ ! -d /var/run/kea ]]
+if [[ ! -d /run/kea ]]
 then
-  mkdir /var/run/kea
+  mkdir /run/kea
 fi
-chown kea:kea /var/run/kea
-chmod 750 /var/run/kea
+chown kea:kea /run/kea
+chmod 750 /run/kea
 
-[[ -f /var/run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /var/run/kea/kea-dhcp4.kea-dhcp4.pid
+[[ -f /run/kea/kea-dhcp4.kea-dhcp4.pid ]] && rm -f /run/kea/kea-dhcp4.kea-dhcp4.pid
 
 {% if postgresql is defined %}
 if [[ $(basename $1) == "kea-dhcp4" ]]
