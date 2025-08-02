@@ -9,6 +9,8 @@ RUN apk add --no-cache \
 
 COPY rootfs /
 
+RUN /usr/sbin/kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
   CMD /healthcheck.sh
 
