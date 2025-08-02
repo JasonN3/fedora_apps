@@ -1,9 +1,16 @@
 FROM docker.io/library/alpine:3.22.0
 
 RUN apk add --no-cache \
-      bash kea-dhcp4 kea-hook-pgsql-cb kea-hook-ha
+      bash \
+      jq \
+      kea-dhcp4 kea-hook-pgsql-cb kea-hook-ha \
+      socat \
+      tini
 
 COPY rootfs /
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD /healthcheck.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/sbin/tini /bin/bash
 set -e
 
 if [[ ! -d /run/kea ]]
@@ -42,4 +42,6 @@ then
   sed -i "s|TAG|${TAG}|" /etc/kea/kea-dhcp4.conf
 fi
 
-exec "$@"
+kea-ctrl-agent -c /etc/kea/kea-ctrl-agent.conf
+
+"$@"
