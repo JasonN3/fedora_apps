@@ -13,12 +13,6 @@ on:
           "nut",
           "wireguard"
           ]'
-      LIFECYCLE:
-        value: '[
-          "main",
-          "dev",
-          "prod"
-          ]'
 
 jobs:
   load-vars:
