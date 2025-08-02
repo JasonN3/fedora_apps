@@ -32,3 +32,10 @@
       ansible.builtin.template:
         src: kea-dhcp4.conf.j2
         dest: "{{ rootfs }}/etc/kea/kea-dhcp4.conf"
+
+    - name: Ensure permissions are set
+      loop:
+        - "{{ rootfs }}/healthcheck.sh"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: '0555'
