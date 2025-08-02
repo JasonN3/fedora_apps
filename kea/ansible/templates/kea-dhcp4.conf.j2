@@ -27,6 +27,8 @@
     "lease-database": {
       "type":                "postgresql",
       "max-reconnect-tries": 0,
+      "read-timeout":        10,
+      "write-timeout":       20,
       "on-fail":             "serve-retry-exit",
       "name":                "{{ postgresql.database }}",
       "user":                "{{ postgresql.username }}",

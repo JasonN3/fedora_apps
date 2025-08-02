@@ -5,5 +5,7 @@ RUN apk add --no-cache \
 
 COPY rootfs /
 
+RUN /usr/sbin/kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]
