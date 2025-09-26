@@ -22,7 +22,6 @@ interface {{ interface.name }}
       {% endif %}
       {% if 'bfd' in interface.ospf and interface.ospf.bfd %}
  ip ospf bfd
- ip ospf bfd profile default
       {% endif %}
     {% endif %}
     {% if 'vrrp' in interface %}
@@ -110,13 +109,5 @@ mpls ldp
  !
 exit
   {% endif %}
-!
-bfd
- profile default
-  transmit-interval 100
-  receive-interval 100
- exit
- !
-exit
 !
 {% endwith %}
