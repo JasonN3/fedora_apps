@@ -23,6 +23,12 @@ interface {{ interface.name }}
       {% if 'bfd' in interface.ospf and interface.ospf.bfd %}
  ip ospf bfd
       {% endif %}
+      {% if 'hello_interval' in interface.ospf %}
+ ip ospf hello-interval {{ interface.ospf.hello_interval }}
+      {% endif %}
+      {% if 'dead_interval' in interface.ospf %}
+ ip ospf dead-interval {{ interface.ospf.dead_interval }}
+      {% endif %}
     {% endif %}
     {% if 'vrrp' in interface %}
  vrrp {{ interface.vrrp.id }}
