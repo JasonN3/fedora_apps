@@ -8,6 +8,15 @@ interface {{ interface.name }}
     {% if 'ip' in interface %}
  ip address {{ interface.ip }}
     {% endif %}
+    {% if 'isis' in interface %}
+ ip router isis {{ interface.isis.tag }}
+    {% if 'bfd' in interface.isis and interface.isis.bfd %}
+ isis bfd
+    {% endif %}
+    {% if 'passive' in interface.isis and interface.isis.passive %}
+ isis passive
+    {% endif %}
+    {% endif %}
     {% if 'ospf' in interface %}
       {% if 'passive' in interface.ospf and interface.ospf.passive %}
  ip ospf passive
@@ -81,6 +90,22 @@ router bgp {{ bgp.asn }}
  exit-address-family
 exit
   {% endfor %}
+!
+  {% if router_info.router.isis is defined %}
+    {% for tag in router_info.router.isis %}
+      {% with isis = router_info.router.isis[tag] %}
+router isis {{ tag }}
+        {% if 'type' in isis %}
+ is-type {{ isis.type }}
+        {% endif %}
+ net {{ isis.area | isis_area }}.{{ router_info.id | isis_system_id }}.00
+        {% if 'apass' in isis %}
+ area-password md5 {{ isis.apass }}
+        {% endif %}
+exit
+      {% endwith %}
+    {% endfor %}
+  {% endif %}
 !
   {% if router_info.router.ospf is defined %}
     {% for ospf in router_info.router.ospf %}

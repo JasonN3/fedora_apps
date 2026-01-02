@@ -1,1 +1,3 @@
 /*/ansible/roles/*/.ansible
+/*/ansible/filter_plugins/__pycache__
+/*/root
