@@ -102,6 +102,9 @@ router isis {{ tag }}
         {% if 'apass' in isis %}
  area-password md5 {{ isis.apass }}
         {% endif %}
+        {% if 'mpls' in router_info %}
+ mpls ldp-sync
+        {% endif %}
 exit
       {% endwith %}
     {% endfor %}
