@@ -74,14 +74,6 @@ router bgp {{ bgp.asn }} {{ ('vrf ' + bgp.vrf ) if 'vrf' in bgp else ''}}
         {% set neighbors = bgp.neighbors.groups %}
         {% for group in bgp.neighbors.groups %}
  neighbor {{ group.name }} peer-group
-          {% if 'cidr' in group %}
- bgp listen range {{ group.cidr }} peer-group {{ group.name }}
-          {% endif %}
-          {% if 'members' in group %}
-            {% for member in group.members %}
- neighbor {{ member }} peer-group {{ group.name }}
-            {% endfor %}
-          {% endif %}
         {% endfor %}
       {% endif %}
       {% if 'routers' in bgp.neighbors %}
@@ -104,6 +96,18 @@ router bgp {{ bgp.asn }} {{ ('vrf ' + bgp.vrf ) if 'vrf' in bgp else ''}}
  neighbor {{ router.address if 'address' in router else router.name }} timers connect {{ bgp.connect_timer }}
         {% endif %}
       {% endfor %}
+      {% if 'groups' in bgp.neighbors %}
+        {% for group in bgp.neighbors.groups %}
+          {% if 'cidr' in group %}
+ bgp listen range {{ group.cidr }} peer-group {{ group.name }}
+          {% endif %}
+          {% if 'members' in group %}
+            {% for member in group.members %}
+ neighbor {{ member }} peer-group {{ group.name }}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
     {% endif %}
  !
  address-family ipv4 unicast
