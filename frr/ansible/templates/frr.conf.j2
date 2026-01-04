@@ -3,6 +3,18 @@ frr version 10.2.1_git
 frr defaults datacenter
 log syslog informational
 !
+  {% if 'vrfs' in router_info %}
+    {% for vrf in router_info.vrfs %}
+vrf {{ vrf }}
+      {% if 'vnis' in router_info.vrfs[vrf] %}
+        {% for vni in router_info.vrfs[vrf].vnis %}
+ vni {{ vni }}
+        {% endfor %}
+      {% endif %}
+exit-vrf
+!
+    {% endfor %}
+  {% endif %}
   {% for interface in router_info.interfaces %}
 interface {{ interface.name }}
     {% if 'ip' in interface %}
@@ -51,46 +63,96 @@ exit
 !
   {% endfor %}
   {% for bgp in router_info.router.bgp %}
-router bgp {{ bgp.asn }}
+router bgp {{ bgp.asn }} {{ ('vrf ' + bgp.vrf ) if 'vrf' in bgp else ''}}
  bgp router-id {{ router_info.id }}
  bgp graceful-restart
-    {% if bgp.neighbors.groups is defined %}
-      {% for group in bgp.neighbors.groups %}
+ bgp graceful-shutdown
+ !
+    {% if 'neighbors' in bgp %}
+      {% set neighbors = [] %}
+      {% if 'groups' in bgp.neighbors %}
+        {% set neighbors = bgp.neighbors.groups %}
+        {% for group in bgp.neighbors.groups %}
  neighbor {{ group.name }} peer-group
- neighbor {{ group.name }} remote-as {{ group.asn }}
- bgp listen range {{ group.cidr }} peer-group {{ group.name }}
+        {% endfor %}
+      {% endif %}
+      {% if 'routers' in bgp.neighbors %}
+        {% set neighbors = neighbors + bgp.neighbors.routers %}
+      {% endif %}
+      {% for router in neighbors %}
+ neighbor {{ router.address if 'address' in router else router.name }} remote-as {{ router.asn }}
+        {% if 'bfd' in router and router.bfd %}
+ neighbor {{ router.address if 'address' in router else router.name }} bfd
+        {% endif %}
+        {% if 'update_source' in router %}
+ neighbor {{ router.address if 'address' in router else router.name }} update-source {{ router.update_source }}
+        {% endif %}
+        {% if 'password' in router %}
+ neighbor {{ router.address if 'address' in router else router.name }} password {{ router.password }}
+        {% endif %}
+        {% if 'connect_timer' in router %}
+ neighbor {{ router.address if 'address' in router else router.name }} timers connect {{ router.connect_timer }}
+        {% elif 'connect_timer' in bgp %}
+ neighbor {{ router.address if 'address' in router else router.name }} timers connect {{ bgp.connect_timer }}
+        {% endif %}
       {% endfor %}
+      {% if 'groups' in bgp.neighbors %}
+        {% for group in bgp.neighbors.groups %}
+          {% if 'cidr' in group %}
+ bgp listen range {{ group.cidr }} peer-group {{ group.name }}
+          {% endif %}
+          {% if 'members' in group %}
+            {% for member in group.members %}
+ neighbor {{ member }} peer-group {{ group.name }}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
     {% endif %}
-    {% for router in bgp.neighbors.routers %}
- neighbor {{ router.address }} remote-as {{ router.asn }}
-      {% if 'bfd' in router and router.bfd %}
- neighbor {{ router.address }} bfd
-      {% endif %}
-      {% if 'update_source' in router %}
- neighbor {{ router.address }} update-source {{ router.update_source }}
-      {% endif %}
-      {% if 'password' in router %}
- neighbor {{ router.address }} password {{ router.password }}
-      {% endif %}
-      {% if 'connect_timer' in router %}
- neighbor {{ router.address }} timers connect {{ router.connect_timer }}
-      {% elif 'connect_timer' in bgp %}
- neighbor {{ router.address }} timers connect {{ bgp.connect_timer }}
-      {% endif %}
-    {% endfor %}
+ !
  address-family ipv4 unicast
-    {% if bgp.summaries is defined %}
+    {% if 'summaries' in bgp %}
       {% for summary in bgp.summaries %}
   aggregate-address {{ summary }} summary-only
       {% endfor %}
     {% endif %}
-    {% for redistribute in bgp.redistribute %}
+    {% if 'redistribute' in bgp %}
+      {% for redistribute in bgp.redistribute %}
   redistribute {{ redistribute }}
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
+    {% if 'import' in bgp %}
+      {% if 'vrfs' in bgp.import %}
+        {% for vrf in bgp.import.vrfs %}
+  import vrf {{ vrf }}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
  exit-address-family
+ !
+  {% if 'evpn' in bgp %}
+ address-family l2vpn evpn
+    {% if 'neighbors' in bgp.evpn %}
+      {% for neighbor in bgp.evpn.neighbors %}
+  neighbor {{ neighbor }} activate
+      {% endfor %}
+    {% endif %}
+    {% if 'advertise' in bgp.evpn %}
+      {% for advertise in bgp.evpn.advertise %}
+        {% if advertise == 'all-vni' %}
+  advertise-all-vni
+        {% elif advertise == 'svi-ip' %}
+  advertise-svi-ip
+        {% else %}
+  advertise {{ advertise }}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+ exit-address-family
+  {% endif %}
 exit
-  {% endfor %}
 !
+  {% endfor %}
   {% if router_info.router.isis is defined %}
     {% for tag in router_info.router.isis %}
       {% with isis = router_info.router.isis[tag] %}
